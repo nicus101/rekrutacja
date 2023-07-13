@@ -1,25 +1,31 @@
 <?php
 
-// wczytanie pliku csv oraz jego konwersja do array
+$file = 'php_internship_data.csv';
 
-$csv = array_map('str_getcsv', file('php_internship_data.csv')); 
-
-$names = array_column($csv, 0);
-
-$iterr = array_count_values($names);
-arsort($iterr);
-$top10 = array_slice($iterr, 0 , 10);
-
-
-
-foreach ($top10 as $name => $count) {
-    
-   $name = ucfirst(mb_strtolower($name, "UTF-8"));
-
-  echo nl2br("$name = $count \n ");
+// sprawdzenie obecności zadeklarowanego pliku oraz wczytanie i konwersja do kolekcji
+if (!file_exists($file)) {
+  echo "brak pliku ", $file;
+  exit;
 }
+$csv = array_map('str_getcsv', file($file));
 
+// wydzielenie listy imion z kolekcji, obliczenie ilości wystąpień tego samego imienia oraz sortowanie od największej
+$names = array_column($csv, 0);
+$iterrations = array_count_values($names);
+arsort($iterrations);
 
+// wyciecie z kolekcji 10 pierwszych wyników
+$top10 = array_slice($iterrations, 0, 10);
 
+// wyświetlenie wyniku końcowego poprzez rozbicie kolekcji na imię i liczbę wystąpień
+echo "<h1>";
+echo "Top 10 występujących imion:";
+echo "</h1>";
+foreach ($top10 as $name => $count) {
+
+  $name = ucfirst(mb_strtolower($name, "UTF-8"));
+
+  echo nl2br("$name = $count \n");
+}
 
 ?>
