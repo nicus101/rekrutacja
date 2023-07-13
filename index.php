@@ -24,8 +24,32 @@ echo "</h1>";
 foreach ($top10 as $name => $count) {
 
   $name = ucfirst(mb_strtolower($name, "UTF-8"));
-
   echo nl2br("$name = $count \n");
 }
 
+
+
+// wydzielenie listy dat z kolekcji oraz usunięcie dat starszych niż 2000-01-01
+$dates = array_column($csv, 1);
+$range = strtotime('2000-01-01');
+$dates_filtered = array_filter($dates, function ($v) use ($range) {
+  
+  $dates = strtotime($v);
+  return $dates >= $range;
+});
+
+// obliczenie ilości wystąpień poszczególnych dat oraz wydzielenie top10
+$dates_iterr = array_count_values($dates_filtered);
+arsort($dates_iterr);
+$top10dates = array_slice($dates_iterr, 0, 10);
+
+// wyświetlenie wyniku końcowego
+echo "<h1>";
+echo "Top 10 występujących dat:";
+echo "</h1>";
+foreach ($top10dates as $date => $count) {
+
+  $date = date('d.m.Y', strtotime($date));
+  echo nl2br("$date = $count \n");
+}
 ?>
